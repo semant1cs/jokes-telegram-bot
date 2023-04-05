@@ -1,1 +1,5 @@
+# системные файлы
+.idea
+
+# файлы разработки
 python-bot/API_token.py
