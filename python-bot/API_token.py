@@ -1,2 +1,2 @@
-API_token = "" // ENTER YOUR TOKEN
+API_token = "" # ENTER YOUR TOKEN
 
