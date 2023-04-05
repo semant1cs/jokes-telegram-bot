@@ -1,10 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, CommandHandler, filters
-
-
-API_token = "5878332892:AAF1xsTx7NcmWnKb5xwCMTdcRa2y-qIb4Iw"
-
+from API_token import API_token
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
