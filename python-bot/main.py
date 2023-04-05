@@ -20,7 +20,7 @@ if __name__ == '__main__':
     application = ApplicationBuilder().token(API_token).build()
 
     start_handler = CommandHandler('start', start)
-    feedback_handler = MessageHandler(filters.TEXT, reply_to_feedback)
+    feedback_handler = MessageHandler(filters.TEXT and ~filters.COMMAND, reply_to_feedback)
 
     application.add_handler(feedback_handler)
     application.add_handler(start_handler)
