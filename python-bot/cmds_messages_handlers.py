@@ -20,7 +20,7 @@ async def reply_to_feedback(update, context):
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f'Ваша оценка: {update.message.text} учтена! Спасибо.'
+        text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо.'
     )
 
 

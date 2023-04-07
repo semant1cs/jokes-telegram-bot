@@ -1,19 +1,13 @@
-import sqlite3
+import sqlite3 as sq
 
-try:
-    conn = sqlite3.connect("jokes.sqlite")
-    cursor = conn.cursor()
+with sq.connect("jokes.sqlite") as con:
+    cur = con.cursor()
 
-    cursor.execute("INSERT OR IGNORE INTO `jokes` (textField, likes, dislikes) VALUES (?, ?, ?)", (1000,))
+    cur.execute("""CREATE TABLE jokes (
+    id INTEGER PRIMARY KEY UNIQUE,
+    text_field TEXT NOT NULL UNIQUE ,
+    likes      INTEGER,
+    dislikes   INTEGER
+    )""")
 
-    users = cursor.execute("SELECT * FROM `jokes`")
-    print(users.fetchall())
 
-    conn.commit()
-
-except sqlite3.Error as error:
-    print("Error", error)
-
-finally:
-    if conn:
-        conn.close()
