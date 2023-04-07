@@ -8,14 +8,16 @@ def delete_database_table(database_name):
 with sq.connect("jokes.sqlite") as con:
     cur = con.cursor()
 
+    delete_database_table('jokes')
+
     cur.execute("""CREATE TABLE IF NOT EXISTS jokes (
-    id INTEGER PRIMARY KEY UNIQUE,
     text_field TEXT NOT NULL UNIQUE ,
-    likes      INTEGER,
-    dislikes   INTEGER
+    likes      INTEGER NOT NULL DEFAULT 0,
+    dislikes   INTEGER NOT NULL DEFAULT 0
     )""")
 
-    delete_database_table("jokes")
+
+
 
 
 
