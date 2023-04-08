@@ -33,7 +33,6 @@ with sq.connect("jokes.sqlite") as con:
 with sqlite3.connect('jokes.sqlite') as con:
     cur = con.cursor()
 
-
     query_count_rating = """UPDATE jokes SET rating = 100 * likes / (likes + dislikes)"""
 
     cur.execute(query_count_rating)
