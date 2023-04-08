@@ -10,7 +10,16 @@ class Joke(Model):
     dislikes = IntegerField
     rating = IntegerField
 
+    class Meta:
+        database = db
+        order_by = 'joke_id'
+        db_table = 'text_field'
+
 class JokeRead(Model):
     joke_id = IntegerField
     user_id = IntegerField
 
+    class Meta:
+        database = db
+        order_by = 'joke_id'
+        db_table = 'used_id'
