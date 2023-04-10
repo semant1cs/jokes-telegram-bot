@@ -16,7 +16,7 @@ async def reply_to_feedback(update, context):
     elif update.message.text == "👎":
         pass
         # набор инструкций для дизлайка
-    # То есть мы в БД, в поле likes, dislikes инкрементируем значение поля
+    # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,

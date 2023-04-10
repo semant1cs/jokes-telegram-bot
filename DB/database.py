@@ -1,12 +1,19 @@
 from models import *
 from mock_data import *
-
-with db:
-    # единичное создание записи в таблице
-    Joke.create(text_field='uaua', likes=14, dislikes=2, rating=13)
+import random
 
 
-    # множественное создание записей из моков
-    Joke.insert_many(insert_jokes).execute()
+def get_random_joke(count_jokes):
+    return random.randint(1, count_jokes)
+
+def get_random_joke_from_db():
+    with db:
+        id_joke = get_random_joke(len(Joke))
+
+        joke = Joke.select().where(Joke.joke_id == id_joke)
+
+        for text in joke:
+            return text.text_field
+
 
 print('done')
