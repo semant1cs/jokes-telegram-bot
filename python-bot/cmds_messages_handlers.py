@@ -2,6 +2,10 @@ from keyboard import keyboard_markup
 from database import get_random_joke_from_db
 
 
+async def send_joke(update, context):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db().text_joke)
+
+
 async def start_dialog(update, context):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -9,7 +13,7 @@ async def start_dialog(update, context):
         reply_markup=keyboard_markup
     )
 
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
+    await send_joke(update, context)
 
 
 async def reply_to_feedback(update, context):
@@ -19,10 +23,12 @@ async def reply_to_feedback(update, context):
     )
 
     if update.message.text == "👍":
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
+        await send_joke(update, context)
         # набор инструкций для лайка
+
+
     elif update.message.text == "👎":
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
+        await send_joke(update, context)
         pass
         # набор инструкций для дизлайка
     # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
