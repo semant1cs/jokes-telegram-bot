@@ -16,6 +16,7 @@ logging.basicConfig(
 if __name__ == '__main__':
     application = ApplicationBuilder().token(os.getenv('API_TOKEN')).build()
 
+
     start_handler = CommandHandler('start', start_dialog)
     feedback_handler = MessageHandler(filters.Text(messages_to_handle), reply_to_feedback)
     unknown_message_handler = MessageHandler(filters.TEXT & ~filters.Text(messages_to_handle), reply_to_unknown_message)

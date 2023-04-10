@@ -1,9 +1,11 @@
 from keyboard import keyboard_markup
-from database import get_random_joke_from_db
+from database import get_random_joke_from_db, update_joke_read
 
 
 async def send_joke(update, context):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db().text_joke)
+    added_joke = get_random_joke_from_db()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=added_joke.text_joke)
+    update_joke_read(added_joke.id, update.effective_chat.id)
 
 
 async def start_dialog(update, context):
@@ -21,6 +23,8 @@ async def reply_to_feedback(update, context):
         chat_id=update.effective_chat.id,
         text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо.'
     )
+
+    added_joke = get_random_joke_from_db()
 
     if update.message.text == "👍":
         await send_joke(update, context)

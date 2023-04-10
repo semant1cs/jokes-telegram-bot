@@ -1,6 +1,6 @@
-from models import *
 import random
-from mock_data import *
+
+from models import *
 
 
 class AddedJoke:
@@ -25,7 +25,7 @@ def get_random_joke_from_db():
 
 def update_joke_read(joke_id, user_id):
     with db:
-        jokeReads = JokeRead.insert(joke_id=joke_id, user_id=user_id).execute
+        JokeRead.insert(joke_id=joke_id, user_id=user_id).execute()
 
 
 # Добавление анекдотов в БД
