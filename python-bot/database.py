@@ -1,5 +1,4 @@
 from models import *
-from mock_data import *
 import random
 
 

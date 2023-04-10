@@ -1,4 +1,5 @@
 from keyboard import keyboard_markup
+from database import get_random_joke_from_db
 
 
 async def start_dialog(update, context):
@@ -7,6 +8,8 @@ async def start_dialog(update, context):
         text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
         reply_markup=keyboard_markup
     )
+
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
 
 
 async def reply_to_feedback(update, context):
