@@ -13,25 +13,23 @@ async def start_dialog(update, context):
 
 
 async def reply_to_feedback(update, context):
-    if update.message.text == "👍":
-        pass
-        # набор инструкций для лайка
-    elif update.message.text == "👎":
-        pass
-        # набор инструкций для дизлайка
-    # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
-
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо.'
     )
 
+    if update.message.text == "👍":
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
+        # набор инструкций для лайка
+    elif update.message.text == "👎":
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=get_random_joke_from_db())
+        pass
+        # набор инструкций для дизлайка
+    # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
+
 
 async def reply_to_unknown_message(update, context):
-
-
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Не могу распознать ваше сообщение. Я генерирую анекдот только после получения его оценки при помощи эмодзи 👍 или 👎"
     )
-
