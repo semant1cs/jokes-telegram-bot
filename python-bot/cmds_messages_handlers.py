@@ -38,11 +38,6 @@ async def reply_to_feedback(update, context):
                                        reply_markup=removed_keyboard)
 
     else:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=f'Ваша оценка учтена!\nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)}'
-        )
-
         if update.message.text == "👍":
             await send_joke(update, context)
             # набор инструкций для лайка
@@ -69,4 +64,5 @@ async def get_help(update, context):
              " после отправки оценки (нравится/не нравится)\nНа следующий день в телеграмм канал будут выложены "
              "самые популярные анекдоты прошлого дня \n"
     )
-    await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg", chat_id=update.effective_chat.id)
+    await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg",
+                                 chat_id=update.effective_chat.id)
