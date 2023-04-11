@@ -1,14 +1,18 @@
 from keyboard import keyboard_markup
 from database import get_random_joke_from_db, update_joke_read
 from utils import decline_jokes
+from telegram import ReplyKeyboardRemove
 
 
 async def send_joke(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
     if added_joke.count_jokes_after == 0:
+        removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось. \nПриходите позже:)")
+                                       text="Доступных анекдотов не осталось. \nПриходите позже:)",
+                                       reply_markup=removed_keyboard)
+        ReplyKeyboardRemove.remove_keyboard()
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text=added_joke.text_joke)
         update_joke_read(added_joke.id, update.effective_chat.id)
@@ -28,12 +32,15 @@ async def reply_to_feedback(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
     if added_joke.count_jokes_after == 0:
+        removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось. \nПриходите позже:)")
+                                       text="Доступных анекдотов не осталось. \nПриходите позже:)",
+                                       reply_markup=removed_keyboard)
+
     else:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо. \nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)} доступно'
+            text=f'Ваша оценка: {update.message.text} учтена!\nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)}'
         )
 
         if update.message.text == "👍":

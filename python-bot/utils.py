@@ -3,8 +3,8 @@ def decline_jokes(count_jokes):
     tens = (count_jokes // 10) % 10
 
     if (tens == 0 or tens >= 2) and ones == 1:
-        return 'анекдот'
+        return 'анекдот доступен'
     elif 2 <= ones <= 4 and (tens == 0 or tens >= 2):
-        return 'анекдота'
+        return 'анекдота доступно'
     else:
-        return 'анекдотов'
+        return 'анекдотов доступно'
