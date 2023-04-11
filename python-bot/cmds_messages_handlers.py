@@ -1,11 +1,12 @@
 from keyboard import keyboard_markup
 from database import get_random_joke_from_db, update_joke_read
+from utils import decline_jokes
 
 
 async def send_joke(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
-    if added_joke.text_joke == 0 and added_joke.id == 0:
+    if added_joke.count_jokes_after == 0:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось. \nПриходите позже:)")
     else:
@@ -26,13 +27,13 @@ async def start_dialog(update, context):
 async def reply_to_feedback(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
-    if added_joke.text_joke == 0 and added_joke.id == 0:
+    if added_joke.count_jokes_after == 0:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось. \nПриходите позже:)")
     else:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо.'
+            text=f'Ваша оценка: {update.message.text} учтена! \nСпасибо. \nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)} доступно'
         )
 
         if update.message.text == "👍":

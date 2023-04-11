@@ -4,9 +4,10 @@ from models import *
 
 
 class AddedJoke:
-    def __init__(self, id, text_joke):
+    def __init__(self, id, text_joke, count_jokes_after):
         self.id = id
         self.text_joke = text_joke
+        self.count_jokes_after = count_jokes_after
 
 
 def get_random_joke_id_from_list(list):
@@ -21,12 +22,12 @@ def get_random_joke_from_db(user_id):
         random_joke_id = get_random_joke_id_from_list(unread_jokes)
 
         if random_joke_id == -1:
-            return AddedJoke(0, 0)
+            return AddedJoke(0, 0, 0)
 
         available_jokes = Joke.select().where(Joke.joke_id == random_joke_id)
 
         for text in available_jokes:
-            return AddedJoke(random_joke_id, text.text_field)
+            return AddedJoke(random_joke_id, text.text_field, len(unread_jokes))
 
 
 def update_joke_read(joke_id, user_id):
