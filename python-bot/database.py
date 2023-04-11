@@ -9,23 +9,30 @@ class AddedJoke:
         self.text_joke = text_joke
 
 
-def get_random_joke_id(count_jokes):
-    return random.randint(1, count_jokes)
+def get_random_joke_id_from_list(list):
+    if len(list) != 0:
+        return list[random.randint(0, len(list) - 1)]
+    return -1
 
 
-def get_random_joke_from_db():
+def get_random_joke_from_db(user_id):
     with db:
-        id_joke = get_random_joke_id(len(Joke))
+        unread_jokes = get_unread_jokes(user_id)
+        random_joke_id = get_random_joke_id_from_list(unread_jokes)
 
-        joke = Joke.select().where(Joke.joke_id == id_joke)
+        if random_joke_id == -1:
+            return AddedJoke(0, 0)
 
-        for text in joke:
-            return AddedJoke(id_joke, text.text_field)
+        available_jokes = Joke.select().where(Joke.joke_id == random_joke_id)
+
+        for text in available_jokes:
+            return AddedJoke(random_joke_id, text.text_field)
 
 
 def update_joke_read(joke_id, user_id):
     with db:
         JokeRead.insert(joke_id=joke_id, user_id=user_id).execute()
+
 
 def get_unread_jokes(user_id):
     with db:
@@ -45,14 +52,12 @@ def get_unread_jokes(user_id):
             if joke in all_jokes:
                 all_jokes.remove(joke)
 
-
         return all_jokes
-
-print(get_unread_jokes(854998259))
 
 
 # Добавление анекдотов в БД
 # Joke.insert_many(insert_jokes).execute()
 
+print(get_random_joke_from_db(854998259))
 
 print('done')
