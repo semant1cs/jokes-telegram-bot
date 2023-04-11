@@ -1,7 +1,7 @@
-from keyboard import keyboard_markup
-from database import get_random_joke_from_db, update_joke_read
-from utils import decline_jokes
 from telegram import ReplyKeyboardRemove
+
+from database import get_random_joke_from_db, update_joke_read
+from keyboard import keyboard_markup
 
 
 async def send_joke(update, context):
@@ -10,7 +10,7 @@ async def send_joke(update, context):
     if added_joke.count_jokes_after == 0:
         removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось.\nПриходите позже:)",
+                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
         ReplyKeyboardRemove.remove_keyboard()
     else:
@@ -34,7 +34,7 @@ async def reply_to_feedback(update, context):
     if added_joke.count_jokes_after == 0:
         removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось. \nПриходите позже:)",
+                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
 
     else:
@@ -62,7 +62,7 @@ async def get_help(update, context):
         chat_id=update.effective_chat.id,
         text="Этот бот отправляет анекдоты, сгенерированные искусственным интелектом\nВы получаете следующий анекдот"
              " после отправки оценки (нравится/не нравится)\nНа следующий день в телеграмм канал будут выложены "
-             "самые популярные анекдоты прошлого дня \n"
+             "самые популярные анекдоты прошлого дня\n"
     )
     await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg",
                                  chat_id=update.effective_chat.id)
