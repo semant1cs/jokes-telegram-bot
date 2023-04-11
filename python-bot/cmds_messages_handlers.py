@@ -10,7 +10,7 @@ async def send_joke(update, context):
     if added_joke.count_jokes_after == 0:
         removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось. \nПриходите позже:)",
+                                       text="Доступных анекдотов не осталось.\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
         ReplyKeyboardRemove.remove_keyboard()
     else:
@@ -40,7 +40,7 @@ async def reply_to_feedback(update, context):
     else:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f'Ваша оценка: {update.message.text} учтена!\nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)}'
+            text=f'Ваша оценка учтена!\nЕщё {added_joke.count_jokes_after} {decline_jokes(added_joke.count_jokes_after)}'
         )
 
         if update.message.text == "👍":
@@ -60,3 +60,13 @@ async def reply_to_unknown_message(update, context):
         chat_id=update.effective_chat.id,
         text="Не могу распознать ваше сообщение. Я генерирую анекдот только после получения его оценки при помощи эмодзи 👍 или 👎"
     )
+
+
+async def get_help(update, context):
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="Этот бот отправляет анекдоты, сгенерированные искусственным интелектом\nВы получаете следующий анекдот"
+             " после отправки оценки (нравится/не нравится)\nНа следующий день в телеграмм канал будут выложены "
+             "самые популярные анекдоты прошлого дня \n"
+    )
+    await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg", chat_id=update.effective_chat.id)
