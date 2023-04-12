@@ -26,12 +26,8 @@ if __name__ == '__main__':
     unknown_message_handler = MessageHandler(filters.TEXT & ~filters.Text(messages_to_handle_keyboard_buttons),
                                              reply_to_unknown_message)
 
-    application.add_handler(start_command_handler)
-    application.add_handler(start_dialog_handler)
-    application.add_handler(about_us_handler)
-    application.add_handler(choose_theme_handler)
-    application.add_handler(help_handler)
-    application.add_handler(unknown_message_handler)
-    application.add_handler(feedback_handler)
+    all_handlers = [start_command_handler, start_dialog_handler, about_us_handler, choose_theme_handler, help_handler, feedback_handler, unknown_message_handler]
+
+    application.add_handlers(all_handlers)
 
     application.run_polling()
