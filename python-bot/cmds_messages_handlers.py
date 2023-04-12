@@ -1,3 +1,4 @@
+import telegram
 from telegram import ReplyKeyboardRemove
 
 from database import get_random_joke_from_db, update_joke_read
@@ -79,3 +80,10 @@ async def choose_theme_joke(update, context):
     # Выбор темы анекдота
 
     await send_joke(update, context, messages_to_handle_keyboard)
+
+
+async def print_about_us(update, context):
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text="Разработчик бота: [Миша Петров](https://t.me/s3mant1cs) \nРазработчик нейросети: [Федя Наймушин](https://t.me/fishvel) пока что в вино\-водочном турнэ\n"
+                                        "Генераторы идеи, гении: [Никита Чашкин](https://vk.com/nikitamels), Ядерный муравей Анастасия", parse_mode=telegram.constants.ParseMode.MARKDOWN_V2)
+
