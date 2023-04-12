@@ -4,7 +4,7 @@ from database import get_random_joke_from_db, update_joke_read
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
 
 
-async def send_joke(update, context):
+async def send_joke(update, context, keyboard):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
     if added_joke.count_jokes_after == 0:
@@ -13,7 +13,9 @@ async def send_joke(update, context):
                                        reply_markup=removed_keyboard)
         ReplyKeyboardRemove.remove_keyboard()
     else:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=added_joke.text_joke)
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text=added_joke.text_joke,
+                                       reply_markup=keyboard)
         update_joke_read(added_joke.id, update.effective_chat.id)
 
 
@@ -32,7 +34,9 @@ async def start_dialog(update, context):
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
     else:
-        await send_joke(update,context)
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="Выберите тему анекдота",
+                                       reply_markup=choose_theme_joke_keyboard)
 
 
 async def reply_to_feedback(update, context):
@@ -45,12 +49,12 @@ async def reply_to_feedback(update, context):
 
     else:
         if update.message.text == "👍":
-            await send_joke(update, context)
+            await send_joke(update, context, messages_to_handle_keyboard)
             # набор инструкций для лайка
 
 
         elif update.message.text == "👎":
-            await send_joke(update, context)
+            await send_joke(update, context, messages_to_handle_keyboard)
             pass
             # набор инструкций для дизлайка
         # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
@@ -72,3 +76,9 @@ async def get_help(update, context):
     )
     await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg",
                                  chat_id=update.effective_chat.id)
+
+
+async def choose_theme_joke(update, context):
+    # Выбор темы анекдота
+
+    await send_joke(update, context, messages_to_handle_keyboard)
