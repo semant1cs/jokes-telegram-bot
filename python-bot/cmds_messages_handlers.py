@@ -1,14 +1,13 @@
 from telegram import ReplyKeyboardRemove
 
 from database import get_random_joke_from_db, update_joke_read
-from keyboard import messages_to_handle_keyboard
+from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
 
 
 async def send_joke(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
     if added_joke.count_jokes_after == 0:
-        removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
@@ -18,21 +17,28 @@ async def send_joke(update, context):
         update_joke_read(added_joke.id, update.effective_chat.id)
 
 
-async def start_dialog(update, context):
+async def handle_start_command(update, context):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
-        reply_markup=messages_to_handle_keyboard
+        reply_markup=start_keyboard
     )
 
-    await send_joke(update, context)
+async def start_dialog(update, context):
+    added_joke = get_random_joke_from_db(update.effective_chat.id)
+
+    if added_joke.count_jokes_after == 0:
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
+                                       reply_markup=removed_keyboard)
+    else:
+        await send_joke(update,context)
 
 
 async def reply_to_feedback(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
     if added_joke.count_jokes_after == 0:
-        removed_keyboard = ReplyKeyboardRemove()
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)

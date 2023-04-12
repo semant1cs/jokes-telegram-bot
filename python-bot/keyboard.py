@@ -1,4 +1,4 @@
-from telegram import ReplyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 
 def construct_keyboard(buttons):
@@ -11,5 +11,5 @@ messages_to_handle_keyboard_buttons = ['👍', '👎', '❌']
 start_keyboard = construct_keyboard(start_keyboard_buttons)
 choose_theme_joke_keyboard = construct_keyboard(choose_theme_joke_keyboard_buttons)
 messages_to_handle_keyboard = construct_keyboard(messages_to_handle_keyboard_buttons)
-
+removed_keyboard = ReplyKeyboardRemove()
 
