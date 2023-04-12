@@ -84,6 +84,6 @@ async def choose_theme_joke(update, context):
 
 async def print_about_us(update, context):
     await context.bot.send_message(chat_id=update.effective_chat.id,
-                                   text="Разработчик бота: [Миша Петров](https://t.me/s3mant1cs) \nРазработчик нейросети: [Федя Наймушин](https://t.me/fishvel) пока что в вино\-водочном турнэ\n"
-                                        "Генераторы идеи, гении: [Никита Чашкин](https://vk.com/nikitamels), Ядерный муравей Анастасия", parse_mode=telegram.constants.ParseMode.MARKDOWN_V2)
+                                   text="Разработчик бота: @s3mant1cs \nРазработчик нейросети: @fishvel пока что в вино\-водочном турнэ\n"
+                                        "Генераторы идеи, гении: @nikitamels, Ядерный муравей Анастасия", parse_mode=telegram.constants.ParseMode.MARKDOWN_V2)
 
