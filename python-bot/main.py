@@ -4,7 +4,7 @@ import os
 
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
 from cmds_messages_handlers import start_dialog, reply_to_unknown_message, reply_to_feedback, get_help
-from keyboard import messages_to_handle
+from keyboard import messages_to_handle_keyboard_buttons
 
 load_dotenv()
 
@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     start_handler = CommandHandler('start', start_dialog)
     help_handler = CommandHandler('help', get_help)
-    feedback_handler = MessageHandler(filters.Text(messages_to_handle), reply_to_feedback)
-    unknown_message_handler = MessageHandler(filters.TEXT & ~filters.Text(messages_to_handle), reply_to_unknown_message)
+    feedback_handler = MessageHandler(filters.Text(messages_to_handle_keyboard_buttons), reply_to_feedback)
+    unknown_message_handler = MessageHandler(filters.TEXT & ~filters.Text(messages_to_handle_keyboard_buttons), reply_to_unknown_message)
 
     application.add_handler(start_handler)
     application.add_handler(help_handler)

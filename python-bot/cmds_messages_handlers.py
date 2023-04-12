@@ -1,7 +1,7 @@
 from telegram import ReplyKeyboardRemove
 
 from database import get_random_joke_from_db, update_joke_read
-from keyboard import keyboard_markup
+from keyboard import messages_to_handle_keyboard
 
 
 async def send_joke(update, context):
@@ -22,7 +22,7 @@ async def start_dialog(update, context):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
-        reply_markup=keyboard_markup
+        reply_markup=messages_to_handle_keyboard
     )
 
     await send_joke(update, context)
