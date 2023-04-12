@@ -25,7 +25,6 @@ if __name__ == '__main__':
     unknown_message_handler = MessageHandler(filters.TEXT & ~filters.Text(messages_to_handle_keyboard_buttons),
                                              reply_to_unknown_message)
 
-
     application.add_handler(start_command_handler)
     application.add_handler(start_dialog_handler)
     application.add_handler(choose_theme_handler)

@@ -26,17 +26,11 @@ async def handle_start_command(update, context):
         reply_markup=start_keyboard
     )
 
-async def start_dialog(update, context):
-    added_joke = get_random_joke_from_db(update.effective_chat.id)
 
-    if added_joke.count_jokes_after == 0:
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                       reply_markup=removed_keyboard)
-    else:
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Выберите тему анекдота",
-                                       reply_markup=choose_theme_joke_keyboard)
+async def start_dialog(update, context):
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text="Выберите тему анекдота",
+                                   reply_markup=choose_theme_joke_keyboard)
 
 
 async def reply_to_feedback(update, context):
@@ -58,6 +52,9 @@ async def reply_to_feedback(update, context):
             pass
             # набор инструкций для дизлайка
         # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
+        elif update.message.text == "❌":
+            await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё🥺",
+                                           reply_markup=removed_keyboard)
 
 
 async def reply_to_unknown_message(update, context):
