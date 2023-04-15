@@ -31,9 +31,18 @@ async def get_help(update, context):
 
 
 async def choose_theme_joke(update, context):
+    added_joke = get_random_joke_from_db(update.effective_chat.id)
+
     # Выбор темы анекдота
 
-    await send_joke(update, context, messages_to_handle_keyboard)
+    if added_joke.count_jokes_after == 0:
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
+                                       reply_markup=removed_keyboard)
+    else:
+        await send_joke(update, context, messages_to_handle_keyboard)
+
+
 
 
 async def print_about_us(update, context):
@@ -50,7 +59,6 @@ async def send_joke(update, context, keyboard):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
-        ReplyKeyboardRemove.remove_keyboard()
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text=added_joke.text_joke,
@@ -79,7 +87,7 @@ async def reply_to_feedback(update, context):
         # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
         elif update.message.text == "❌":
             await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё 🥺",
-                                           reply_markup=removed_keyboard)
+                                           reply_markup=start_keyboard)
 
 
 async def reply_to_unknown_message(update, context):

@@ -5,7 +5,7 @@ import os
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
 from cmds_messages_handlers import handle_start_command, start_dialog, reply_to_unknown_message, reply_to_feedback, \
     get_help, choose_theme_joke, print_about_us
-from keyboard import messages_to_handle_keyboard_buttons, start_keyboard_buttons, choose_theme_joke_keyboard_buttons
+from keyboard import messages_to_handle_keyboard_buttons, choose_theme_joke_keyboard_buttons
 
 load_dotenv()
 

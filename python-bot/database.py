@@ -37,21 +37,22 @@ def update_joke_read(joke_id, user_id):
 
 def get_unread_jokes(user_id):
     with db:
-        read_jokes_ids = []
-        unread_jokes_ids = []
+        read_jokes = []
+        all_jokes = []
 
         query_all_jokes = Joke.select()
         query_read_jokes = JokeRead.select().where(JokeRead.user_id == user_id)
-        
-        
-        for joke in query_read_jokes:
-            read_jokes_ids.append(joke.joke_id)
-        
-        for joke in query_all_jokes:
-            if not joke in read_jokes_ids:
-                unread_jokes_ids.append(joke.joke_id)
 
-        return unread_jokes_ids
+        for joke in query_all_jokes:
+            all_jokes.append(joke.joke_id)
+
+        for joke in query_read_jokes:
+            if joke.joke_id in all_jokes:
+                all_jokes.remove(joke.joke_id)
+
+        print(all_jokes)
+
+        return all_jokes
 
 
 # Добавление анекдотов в БД
