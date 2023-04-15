@@ -1,7 +1,6 @@
 import telegram
-from telegram import ReplyKeyboardRemove
 
-from database import get_random_joke_from_db, update_joke_read
+from database import get_random_joke_from_db, update_joke_read, increment_grade
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
 
 
@@ -38,11 +37,9 @@ async def choose_theme_joke(update, context):
     if added_joke.count_jokes_after == 0:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                       reply_markup=removed_keyboard)
+                                       reply_markup=start_keyboard)
     else:
         await send_joke(update, context, messages_to_handle_keyboard)
-
-
 
 
 async def print_about_us(update, context):
@@ -69,23 +66,18 @@ async def send_joke(update, context, keyboard):
 async def reply_to_feedback(update, context):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
+    if update.message.text == "👍":
+        increment_grade(added_joke.id, 'likes')
+    elif update.message.text == "👎":
+        increment_grade(added_joke.id, 'dislikes')
+
     if added_joke.count_jokes_after == 0:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
-
     else:
-        if update.message.text == "👍":
-            await send_joke(update, context, messages_to_handle_keyboard)
-            # набор инструкций для лайка
-
-
-        elif update.message.text == "👎":
-            await send_joke(update, context, messages_to_handle_keyboard)
-            pass
-            # набор инструкций для дизлайка
-        # То есть мы в БД, в поле likes, dislikes инкрементируем значение записи таблицы
-        elif update.message.text == "❌":
+        await send_joke(update, context, messages_to_handle_keyboard)
+        if update.message.text == "❌":
             await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё 🥺",
                                            reply_markup=start_keyboard)
 
