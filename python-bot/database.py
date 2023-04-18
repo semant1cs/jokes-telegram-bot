@@ -1,4 +1,5 @@
 import random
+from mock_data import insert_jokes
 
 from models import *
 
@@ -9,16 +10,21 @@ class AddedJoke:
         self.text_joke = text_joke
         self.count_jokes_after = count_jokes_after
 
+class JokesStateClass:
+    def __init__(self, unread_jokes, read_jokes):
+        self.unread_jokes = unread_jokes
+        self.read_jokes = read_jokes
 
-def get_random_joke_id_from_list(list):
-    if len(list) != 0:
-        return list[random.randint(0, len(list) - 1)]
+
+def get_random_joke_id_from_list(available_jokes):
+    if len(available_jokes) != 0:
+        return available_jokes[random.randint(0, len(available_jokes) - 1)]
     return -1
 
 
 def get_random_joke_from_db(user_id):
     with db:
-        unread_jokes = get_unread_jokes(user_id)
+        unread_jokes = get_unread_jokes(user_id).unread_jokes
         random_joke_id = get_random_joke_id_from_list(unread_jokes)
 
         if random_joke_id == -1:
@@ -37,24 +43,27 @@ def update_joke_read(joke_id, user_id):
 
 def get_unread_jokes(user_id):
     with db:
-        all_jokes = []
+        unread_jokes = []
+        read_jokes = []
 
         query_all_jokes = Joke.select()
         query_read_jokes = JokeRead.select().where(JokeRead.user_id == user_id)
 
         for joke in query_all_jokes:
-            all_jokes.append(joke.joke_id)
+            unread_jokes.append(joke.joke_id)
 
         for joke in query_read_jokes:
-            if joke.joke_id in all_jokes:
-                all_jokes.remove(joke.joke_id)
+            read_jokes.append(joke.joke_id)
+            if joke.joke_id in unread_jokes:
+                unread_jokes.remove(joke.joke_id)
 
-        return all_jokes
+        return JokesStateClass(unread_jokes, read_jokes)
+
 
 def increment_grade(joke_id, grade):
     with db:
         if grade == "likes":
-            query_joke_to_grade = Joke.update(likes = Joke.likes + 1).where(Joke.joke_id == joke_id)
+            query_joke_to_grade = Joke.update(likes=Joke.likes + 1).where(Joke.joke_id == joke_id)
         else:
             query_joke_to_grade = Joke.update(dislikes=Joke.dislikes + 1).where(Joke.joke_id == joke_id)
         query_joke_to_grade.execute()

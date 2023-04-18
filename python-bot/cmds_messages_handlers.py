@@ -1,6 +1,6 @@
 import telegram
 
-from database import get_random_joke_from_db, update_joke_read, increment_grade
+from database import get_random_joke_from_db, update_joke_read, increment_grade, get_unread_jokes
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
 
 
@@ -64,22 +64,17 @@ async def send_joke(update, context, keyboard):
 
 
 async def reply_to_feedback(update, context):
-    added_joke = get_random_joke_from_db(update.effective_chat.id)
+    last_read_joke = get_unread_jokes(update.effective_chat.id).read_jokes[-1]
 
     if update.message.text == "👍":
-        increment_grade(added_joke.id, 'likes')
+        increment_grade(last_read_joke, 'likes')
     elif update.message.text == "👎":
-        increment_grade(added_joke.id, 'dislikes')
-
-    if added_joke.count_jokes_after == 0:
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                       reply_markup=removed_keyboard)
-    else:
-        await send_joke(update, context, messages_to_handle_keyboard)
-        if update.message.text == "❌":
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё 🥺",
-                                           reply_markup=start_keyboard)
+        increment_grade(last_read_joke, 'dislikes')
+    elif update.message.text == "❌":
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё 🥺",
+                                       reply_markup=start_keyboard)
+        return
+    await send_joke(update, context, messages_to_handle_keyboard)
 
 
 async def reply_to_unknown_message(update, context):
