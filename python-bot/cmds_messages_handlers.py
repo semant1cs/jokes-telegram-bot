@@ -1,6 +1,6 @@
 import telegram
 
-from database import get_random_joke_from_db, update_joke_read, increment_grade, JokesStateClass
+from database import FeedbackJoke, AddedJoke, JokesStateClass
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
 from utils import is_jokes_anymore
 
@@ -31,14 +31,12 @@ async def get_help(update, context):
 
 
 async def choose_theme_joke(update, context):
-    added_joke = get_random_joke_from_db(update.effective_chat.id)
+    added_joke = AddedJoke.get_random_joke_from_db(update.effective_chat.id)
 
     # Выбор темы анекдота
 
     if not is_jokes_anymore(added_joke.count_jokes_after):
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                       reply_markup=start_keyboard)
+        await send_no_available_jokes_message(update, context)
     else:
         await send_joke(update, context, messages_to_handle_keyboard)
 
@@ -51,26 +49,29 @@ async def print_about_us(update, context):
 
 
 async def send_joke(update, context, keyboard):
-    added_joke = get_random_joke_from_db(update.effective_chat.id)
+    added_joke = AddedJoke.get_random_joke_from_db(update.effective_chat.id)
 
     if not is_jokes_anymore(added_joke.count_jokes_after):
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                       reply_markup=removed_keyboard)
+        await send_no_available_jokes_message(update, context)
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text=added_joke.text_joke,
                                        reply_markup=keyboard)
-        update_joke_read(added_joke.id, update.effective_chat.id)
+        FeedbackJoke.update_joke_read(added_joke.id, update.effective_chat.id)
 
+
+async def send_no_available_jokes_message(update, context):
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text="Доступных анекдотов не осталось\nПриходите позже:)",
+                                   reply_markup=removed_keyboard)
 
 async def reply_to_feedback(update, context):
     last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
 
     if update.message.text == "👍":
-        increment_grade(last_read_joke, 'likes')
+        FeedbackJoke.increment_grade(last_read_joke, 'likes')
     elif update.message.text == "👎":
-        increment_grade(last_read_joke, 'dislikes')
+        FeedbackJoke.increment_grade(last_read_joke, 'dislikes')
     elif update.message.text == "❌":
         await context.bot.send_message(chat_id=update.effective_chat.id, text="Возвращайся ещё 🥺",
                                        reply_markup=start_keyboard)

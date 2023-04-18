@@ -1,3 +1,5 @@
+import random
+
 def decline_jokes(count_jokes):
     ones = count_jokes % 10
     tens = (count_jokes // 10) % 10
@@ -11,3 +13,8 @@ def decline_jokes(count_jokes):
 
 def is_jokes_anymore(list_jokes):
     return list_jokes != 0
+
+def get_random_joke_id_from_list(available_jokes):
+    if len(available_jokes) != 0:
+        return available_jokes[random.randint(0, len(available_jokes) - 1)]
+    return -1

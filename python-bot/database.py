@@ -1,6 +1,5 @@
-import random
-
 from models import *
+from utils import get_random_joke_id_from_list
 
 
 class AddedJoke:
@@ -8,6 +7,21 @@ class AddedJoke:
         self.id = id
         self.text_joke = text_joke
         self.count_jokes_after = count_jokes_after
+
+    @staticmethod
+    def get_random_joke_from_db(user_id):
+        with db:
+            unread_jokes = JokesStateClass.get_unread_jokes(user_id).unread_jokes
+            random_joke_id = get_random_joke_id_from_list(unread_jokes)
+
+            if random_joke_id == -1:
+                return AddedJoke(0, 0, 0)
+
+            available_jokes = Joke.select().where(Joke.joke_id == random_joke_id)
+
+            for text in available_jokes:
+                return AddedJoke(random_joke_id, text.text_field, len(unread_jokes))
+
 
 class JokesStateClass:
     def __init__(self, unread_jokes, read_jokes):
@@ -34,38 +48,26 @@ class JokesStateClass:
             return JokesStateClass(unread_jokes, read_jokes)
 
 
-def get_random_joke_id_from_list(available_jokes):
-    if len(available_jokes) != 0:
-        return available_jokes[random.randint(0, len(available_jokes) - 1)]
-    return -1
+class FeedbackJoke:
+    def __init__(self, joke_id, likes, dislikes, rating):
+        self.joke_id = joke_id
+        self.likes = likes
+        self.dislikes = dislikes
+        self.rating = rating
 
+    @staticmethod
+    def update_joke_read(joke_id, user_id):
+        with db:
+            JokeRead.insert(joke_id=joke_id, user_id=user_id).execute()
 
-def get_random_joke_from_db(user_id):
-    with db:
-        unread_jokes = JokesStateClass.get_unread_jokes(user_id).unread_jokes
-        random_joke_id = get_random_joke_id_from_list(unread_jokes)
-
-        if random_joke_id == -1:
-            return AddedJoke(0, 0, 0)
-
-        available_jokes = Joke.select().where(Joke.joke_id == random_joke_id)
-
-        for text in available_jokes:
-            return AddedJoke(random_joke_id, text.text_field, len(unread_jokes))
-
-
-def update_joke_read(joke_id, user_id):
-    with db:
-        JokeRead.insert(joke_id=joke_id, user_id=user_id).execute()
-
-
-def increment_grade(joke_id, grade):
-    with db:
-        if grade == "likes":
-            query_joke_to_grade = Joke.update(likes=Joke.likes + 1).where(Joke.joke_id == joke_id)
-        elif grade == "dislikes":
-            query_joke_to_grade = Joke.update(dislikes=Joke.dislikes + 1).where(Joke.joke_id == joke_id)
-        query_joke_to_grade.execute()
+    @staticmethod
+    def increment_grade(joke_id, grade):
+        with db:
+            if grade == "likes":
+                query_joke_to_grade = Joke.update(likes=Joke.likes + 1).where(Joke.joke_id == joke_id)
+            elif grade == "dislikes":
+                query_joke_to_grade = Joke.update(dislikes=Joke.dislikes + 1).where(Joke.joke_id == joke_id)
+            query_joke_to_grade.execute()
 
 
 # Добавление анекдотов в БД
