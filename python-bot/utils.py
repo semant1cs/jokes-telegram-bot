@@ -8,3 +8,6 @@ def decline_jokes(count_jokes):
         return 'анекдота доступно'
     else:
         return 'анекдотов доступно'
+
+def is_jokes_anymore(list_jokes):
+    return list_jokes != 0

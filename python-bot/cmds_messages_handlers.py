@@ -1,7 +1,8 @@
 import telegram
 
-from database import get_random_joke_from_db, update_joke_read, increment_grade, get_unread_jokes
+from database import get_random_joke_from_db, update_joke_read, increment_grade, JokesStateClass
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
+from utils import is_jokes_anymore
 
 
 async def handle_start_command(update, context):
@@ -34,7 +35,7 @@ async def choose_theme_joke(update, context):
 
     # Выбор темы анекдота
 
-    if added_joke.count_jokes_after == 0:
+    if not is_jokes_anymore(added_joke.count_jokes_after):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=start_keyboard)
@@ -52,7 +53,7 @@ async def print_about_us(update, context):
 async def send_joke(update, context, keyboard):
     added_joke = get_random_joke_from_db(update.effective_chat.id)
 
-    if added_joke.count_jokes_after == 0:
+    if not is_jokes_anymore(added_joke.count_jokes_after):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Доступных анекдотов не осталось\nПриходите позже:)",
                                        reply_markup=removed_keyboard)
@@ -64,7 +65,7 @@ async def send_joke(update, context, keyboard):
 
 
 async def reply_to_feedback(update, context):
-    last_read_joke = get_unread_jokes(update.effective_chat.id).read_jokes[-1]
+    last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
 
     if update.message.text == "👍":
         increment_grade(last_read_joke, 'likes')
