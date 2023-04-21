@@ -72,8 +72,8 @@ class FeedbackJoke:
 
 
 # Добавление анекдотов в БД
-url_jokes = "http://anekdotov.net/anekdot/"
-jokes = parse_jokes(url_jokes)
-Joke.insert_many(jokes).execute()
+# url_jokes = "http://anekdotov.net/anekdot/"
+# jokes = parse_jokes(url_jokes)
+# Joke.insert_many(jokes).execute()
 
 print('done')

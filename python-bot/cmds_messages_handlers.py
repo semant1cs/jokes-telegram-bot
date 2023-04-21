@@ -66,7 +66,11 @@ async def send_no_available_jokes_message(update, context):
                                    reply_markup=removed_keyboard)
 
 async def reply_to_feedback(update, context):
-    last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
+    if is_user_read_anyone_joke(update):
+        last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
+    else:
+        await handle_start_command(update, context)
+        return
 
     if update.message.text == "👍":
         FeedbackJoke.increment_grade(last_read_joke, 'likes')
@@ -84,3 +88,10 @@ async def reply_to_unknown_message(update, context):
         chat_id=update.effective_chat.id,
         text="Не могу распознать ваше сообщение. Я генерирую анекдот только после получения его оценки при помощи эмодзи 👍 или 👎"
     )
+
+def is_user_read_anyone_joke(update):
+    try:
+        last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
+    except IndexError:
+        return False
+    return True
