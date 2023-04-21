@@ -1,20 +1,17 @@
 from bs4 import BeautifulSoup
 import requests
 
-url_jokes = "http://anekdotov.net/anekdot/"
-page = requests.get(url_jokes)
 
-filtered_news = []
-all_news = []
+def parse_jokes(url_jokes):
+    page = requests.get(url_jokes)
 
-soup = BeautifulSoup(page.text, "html.parser")
+    filtered_news = []
 
-all_news = soup.findAll('div', class_='anekdot')
+    soup = BeautifulSoup(page.text, "html.parser")
 
-for data in all_news:
-    filtered_news.append(data.text)
+    all_news = soup.findAll('div', class_='anekdot')
 
-print(filtered_news)
+    for data in all_news:
+        filtered_news.append((data.text, 0, 0, 0))
 
-# print(soup)
-
+    return filtered_news
