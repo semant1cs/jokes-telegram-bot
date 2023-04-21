@@ -1,8 +1,20 @@
-insert_jokes = [
-    ('Почему трансгендерные люди прут в женский спорт, а в мужской нет? \n'
-     'Может, ты не трансженщина, а обычный неудачник?', 10, 3, 60),
-    ('Когда Наташа сидела на диете, то даже Барсик прятал свою миску. На всякий случай...', 2, 13, 30),
-    (
-        '- Из всех домашних гаджетов самый популярный - это холодильник! Он лидер по просмотрам! \n- Да и по посещаемости тоже...',
-        1023, 412, 50)
-]
+from bs4 import BeautifulSoup
+import requests
+
+url_jokes = "http://anekdotov.net/anekdot/"
+page = requests.get(url_jokes)
+
+filtered_news = []
+all_news = []
+
+soup = BeautifulSoup(page.text, "html.parser")
+
+all_news = soup.findAll('div', class_='anekdot')
+
+for data in all_news:
+    filtered_news.append(data.text)
+
+print(filtered_news)
+
+# print(soup)
+

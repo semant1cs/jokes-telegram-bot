@@ -6,7 +6,7 @@ def construct_keyboard(buttons):
 
 
 start_keyboard_buttons = ['Начать', '/help', 'О создателях']
-choose_theme_joke_keyboard_buttons = ['Анекдоты на случайную тему', 'Смихихи', 'хехех']
+choose_theme_joke_keyboard_buttons = ['Анекдоты на случайную тему']
 messages_to_handle_keyboard_buttons = ['👍', '👎', '❌']
 
 start_keyboard = construct_keyboard(start_keyboard_buttons)
