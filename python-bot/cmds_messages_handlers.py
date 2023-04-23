@@ -1,16 +1,28 @@
 import telegram
+import os
+from dotenv import load_dotenv
 
 from database import FeedbackJoke, AddedJoke, JokesStateClass
-from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, removed_keyboard
+from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, admin_keyboard
 from utils import is_jokes_anymore
+load_dotenv()
 
 
 async def handle_start_command(update, context):
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
-        reply_markup=start_keyboard
-    )
+    if str(update.effective_chat.id) in os.getenv("ADMIN_IDS"):
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Вы вошли в админ-панель",
+            reply_markup=admin_keyboard
+        )
+    else:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
+            reply_markup=start_keyboard
+        )
+
+
 
 
 async def start_dialog(update, context):
@@ -63,7 +75,8 @@ async def send_joke(update, context, keyboard):
 async def send_no_available_jokes_message(update, context):
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Доступных анекдотов не осталось\nПриходите позже:)",
-                                   reply_markup=removed_keyboard)
+                                   reply_markup=start_keyboard)
+
 
 async def reply_to_feedback(update, context):
     if is_user_read_anyone_joke(update):
@@ -89,9 +102,10 @@ async def reply_to_unknown_message(update, context):
         text="Не могу распознать ваше сообщение. Я генерирую анекдот только после получения его оценки при помощи эмодзи 👍 или 👎"
     )
 
+
 def is_user_read_anyone_joke(update):
     try:
-        last_read_joke = JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
+        JokesStateClass.get_unread_jokes(update.effective_chat.id).read_jokes[-1]
     except IndexError:
         return False
     return True

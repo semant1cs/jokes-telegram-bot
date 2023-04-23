@@ -1,6 +1,5 @@
 from models import *
 from utils import get_random_joke_id_from_list
-from mock_data import *
 
 
 class AddedJoke:
