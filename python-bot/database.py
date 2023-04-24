@@ -1,5 +1,6 @@
 from models import *
 from utils import get_random_joke_id_from_list
+from mock_data import parse_jokes
 
 
 class AddedJoke:
@@ -71,8 +72,16 @@ class FeedbackJoke:
 
 
 # Добавление анекдотов в БД
-# url_jokes = "http://anekdotov.net/anekdot/"
-# jokes = parse_jokes(url_jokes)
-# Joke.insert_many(jokes).execute()
+def add_joke_from_other_source(url_jokes):
+    jokes = parse_jokes(url_jokes)
+    Joke.insert_many(jokes).execute()
+    print('done')
 
-print('done')
+
+def calculate_rating_jokes():
+    with db:
+        query_joke_rating_update = Joke.update(rating=100 * Joke.likes / (Joke.likes + Joke.dislikes))
+        query_joke_rating_update.execute()
+
+
+calculate_rating_jokes()

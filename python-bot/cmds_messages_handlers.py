@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from database import FeedbackJoke, AddedJoke, JokesStateClass
 from keyboard import start_keyboard, choose_theme_joke_keyboard, messages_to_handle_keyboard, admin_keyboard
 from utils import is_jokes_anymore
+
 load_dotenv()
 
 
@@ -15,14 +16,13 @@ async def handle_start_command(update, context):
             text="Вы вошли в админ-панель",
             reply_markup=admin_keyboard
         )
+
     else:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="Привет, это бот, который отправляет анекдоты, придуманные искусственным интеллектом",
             reply_markup=start_keyboard
         )
-
-
 
 
 async def start_dialog(update, context):
