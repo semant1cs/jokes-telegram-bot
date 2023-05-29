@@ -38,8 +38,6 @@ async def get_help(update, context):
              " после отправки оценки (нравится/не нравится)\nНа следующий день в телеграмм канал будут выложены "
              "самые популярные анекдоты прошлого дня\n"
     )
-    await context.bot.send_photo(photo="https://basket-09.wb.ru/vol1181/part118162/118162658/images/c516x688/1.jpg",
-                                 chat_id=update.effective_chat.id)
 
 
 async def choose_theme_joke(update, context):
@@ -55,8 +53,7 @@ async def choose_theme_joke(update, context):
 
 async def print_about_us(update, context):
     await context.bot.send_message(chat_id=update.effective_chat.id,
-                                   text="Разработчик бота: @s3mant1cs \nРазработчик нейросети: @fishvel пока что в вино\-водочном турнэ\n"
-                                        "Генераторы идеи, гении: @nikitamels, Ядерный муравей Анастасия",
+                                   text="@s3mant1cs \n@fishvel",
                                    parse_mode=telegram.constants.ParseMode.MARKDOWN_V2)
 
 

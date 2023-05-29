@@ -80,12 +80,13 @@ def add_joke_from_other_source(url_jokes):
 
 def calculate_rating_jokes():
     with db:
-        query_joke_update_rating = Joke.update(rating=100 * Joke.likes / (Joke.likes + Joke.dislikes)).where(
+        query_joke_update_rating = Joke \
+            .update(rating=100 * Joke.likes / (Joke.likes + Joke.dislikes)) \
+            .where(
             Joke.likes != 0 and Joke.dislikes != 0)
         query_joke_update_rating_no_feedback = Joke.update(rating=0).where(Joke.likes == 0 and Joke.dislikes == 0)
 
         query_joke_update_rating.execute()
         query_joke_update_rating_no_feedback.execute()
 
-
-calculate_rating_jokes()
+# calculate_rating_jokes()

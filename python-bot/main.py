@@ -1,8 +1,9 @@
 import logging
-from dotenv import load_dotenv
 import os
 
+from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
+
 from cmds_messages_handlers import handle_start_command, start_dialog, reply_to_unknown_message, reply_to_feedback, \
     get_help, choose_theme_joke, print_about_us
 from keyboard import messages_to_handle_keyboard_buttons, choose_theme_joke_keyboard_buttons
@@ -15,7 +16,8 @@ logging.basicConfig(
 )
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token(os.getenv('API_TOKEN')).build()
+    token_bot = os.getenv('API_TOKEN')
+    application = ApplicationBuilder().token(token_bot).build()
 
     start_command_handler = CommandHandler('start', handle_start_command)
     start_dialog_handler = MessageHandler(filters.Text(['Начать']), start_dialog)
